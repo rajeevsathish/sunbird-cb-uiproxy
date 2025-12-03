@@ -31,13 +31,15 @@ export const PERMISSION_HELPER = {
             if (!_.includes(reqObj.session.userRoles, 'PUBLIC')) {
                 reqObj.session.userRoles.push('PUBLIC')
             }
-            this.createNodeBBUser(reqObj, callback)
+            //this.createNodeBBUser(reqObj, callback)
             // tslint:disable-next-line: no-any
             reqObj.session.save((error: any) => {
                 if (error) {
                     logError('permissionHelper:: ERROR: Failed to save session with roles -- ', error)
+                    callback(null, null)
                 } else {
                     logInfo('permissionHelper:: SUCCESS: Session saved with roles at ' + new Date().toString())
+                    callback(null, userData)
                 }
             })
         } else {
