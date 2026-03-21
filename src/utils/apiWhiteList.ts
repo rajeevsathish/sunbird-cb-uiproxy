@@ -5,7 +5,7 @@ const dateFormat        = require('dateformat')
 
 import { NextFunction, Request, Response } from 'express'
 import { CONSTANTS } from './env'
-import { logError, logInfo } from './logger'
+import { logDebug, logError, logInfo, logWarn } from './logger'
 import { ROLE } from './roles'
 import { API_LIST } from './whitelistApis'
 
@@ -208,8 +208,7 @@ const executeChecks = async (req: Request, res: Response , next: NextFunction, c
             respond403(req, res)
         })
     } catch (error) {
-        // tslint:disable-next-line: no-console
-        console.log('ERROR --', error)
+        logError('ERROR --', String(error))
         respond403(req, res)
     }
 }
@@ -331,7 +330,7 @@ export const isAllowed = () => {
                     }
                 } else {
                     // If API is not whitelisted
-                    logInfo('Portal_API_WHITELIST: URL not whitelisted')
+                    logWarn('Portal_API_WHITELIST: URL not whitelisted')
                     respond403(req, res)
                 }
             }
@@ -362,7 +361,7 @@ const validateAPI = (req: Request, res: Response, next: NextFunction) => {
         next()
     } else {
         // If API is not whitelisted
-        logInfo('Portal_API_WHITELIST_LOGGER: URL not whitelisted')
+        logWarn('Portal_API_WHITELIST_LOGGER: URL not whitelisted')
         respond403(req, res)
     }
 }
@@ -377,14 +376,14 @@ export function apiWhiteListLogger() {
         }
         const REQ_URL = req.path
         if (!_.includes(REQ_URL, '/resource') && !_.includes(REQ_URL, '/eclogin') && (req.session)) {
-             logInfo('UIPROXY:: apiWhiteListLogger : checking if the login is to resource  and session is there')
+             logDebug('UIPROXY:: apiWhiteListLogger : checking if the login is to resource and session is there')
              if (!('userRoles' in req.session) || (('userRoles' in req.session) && (req.session.userRoles.length === 0))) {
-                logError('Portal_API_WHITELIST_LOGGER: User needs to authenticated themselves', '------', new Date().toString())
-                logInfo('UIPROXY:: apiWhiteListLogger :  respond419 method will be called')
+                logWarn('Portal_API_WHITELIST_LOGGER: User needs to authenticated themselves', '------', new Date().toString())
+                logDebug('UIPROXY:: apiWhiteListLogger : respond419 method will be called')
                 respond419(req, res)
             } else {
                 // Pattern match for URL
-                logInfo('In WhilteList Call========' + REQ_URL, '------', new Date().toString())
+                logDebug('In WhilteList Call========' + REQ_URL, '------', new Date().toString())
                 validateAPI(req, res, next)
             }
         } else {

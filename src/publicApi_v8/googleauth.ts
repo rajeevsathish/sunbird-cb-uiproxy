@@ -1,6 +1,6 @@
 import express from 'express'
 import { CONSTANTS } from '../utils/env'
-import { logError, logInfo } from '../utils/logger'
+import { logError, logInfo, logWarn } from '../utils/logger'
 import { getGoogleProfile } from './googleOAuthHelper'
 import { createUserWithMailId, fetchUserByEmailId, updateKeycloakSession } from './ssoUserHelper'
 
@@ -67,7 +67,7 @@ googleAuth.get('/callback', async (req, res) => {
             }
         }
         if (result.errMessage !== '') {
-            logInfo('Received error in processing... Error ' + result.errMessage)
+            logWarn('Received error in processing... Error ' + result.errMessage)
             resRedirectUrl = `https://${host}/public/logout?error=` + encodeURIComponent(JSON.stringify(result.errMessage))
         } else if (isFirstTimeUser) {
             resRedirectUrl = `https://${host}/public/welcome`

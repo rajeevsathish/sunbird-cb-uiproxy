@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Request, Response, Router } from 'express'
 import { axiosRequestConfig } from '../../configs/request.config'
 import { CONSTANTS } from '../../utils/env'
+import { logDebug } from '../../utils/logger'
 import { ERROR } from '../../utils/message'
 import { extractUserIdFromRequest } from '../../utils/requestExtract'
 const apiEndPoints = {
@@ -171,10 +172,8 @@ topicsApi.get('/autocomplete', async (req: Request, res: Response) => {
     const rootOrg = req.header('rootOrg')
     const org = req.header('org')
     const langCode = req.header('locale')
-    // tslint:disable-next-line: no-console
-    console.log(
-      // tslint:disable-next-line: max-line-length
-      `AUTOCOMPLETE::${apiEndPoints.autocomplete}?query=${query}    :: rootOrg:${rootOrg}, org:${org}, langCode:${langCode}`
+    logDebug(
+      `AUTOCOMPLETE::${apiEndPoints.autocomplete}?query=${query} :: rootOrg:${rootOrg}, org:${org}, langCode:${langCode}`
     )
     const response = await axios.get(`${apiEndPoints.autocomplete}?query=${query}`, {
       ...axiosRequestConfig,

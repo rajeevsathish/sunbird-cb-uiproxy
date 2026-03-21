@@ -174,8 +174,7 @@ export function wTokenApiMock(req: any, token: any): Promise<any> {
       })
 
     } catch (err) {
-      // tslint:disable-next-line: no-console
-      console.log('------------------W TOKEN ERROR---------\n', err)
+      logError('------------------W TOKEN ERROR---------', err)
       reject()
     }
   })

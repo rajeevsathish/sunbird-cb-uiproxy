@@ -511,8 +511,7 @@ contentApi.post('/setCookie', async (req, res) => {
         // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>\n SET COOKIE RESPONSE HEADERS >>\n', response.headers)
       })
       .on('error', (err) => {
-        // tslint:disable-next-line: no-console
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>\n ALERT! SET COOKIE ERROR >>\n', err)
+        logError('ALERT! SET COOKIE ERROR', err)
       })
       .pipe(res)
   } catch (err) {

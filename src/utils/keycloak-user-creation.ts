@@ -60,7 +60,7 @@ export function checkUUIDMaster(uniqueKey: any): Promise<any> {
                     const key = result.rows[0]
                     resolve(key)
                 } else {
-                    logInfo('Error on DB request : ')
+                    logError('Error on DB request')
                     reject(false)
                 }
                 clientConnect.shutdown()

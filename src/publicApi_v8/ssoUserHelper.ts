@@ -2,7 +2,7 @@ import axios from 'axios'
 import lodash from 'lodash'
 import { axiosRequestConfig } from '../configs/request.config'
 import { CONSTANTS } from '../utils/env'
-import { logError, logInfo } from '../utils/logger'
+import { logError, logInfo, logWarn } from '../utils/logger'
 import { getKeyCloakClient } from './keycloakHelper'
 
 const API_END_POINTS = {
@@ -40,7 +40,7 @@ export async function fetchUserByEmailId(emailId: string) {
                 result.userExist = true
                 result.rootOrgId = contentObj.rootOrgId
             } else {
-                logInfo('user account is diabled. throwing error')
+                logWarn('user account is disabled. throwing error')
                 result.errMessage = 'Account Disabled. Please contact Admin.'
             }
         } else {

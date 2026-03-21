@@ -4,7 +4,7 @@ import keycloakConnect from 'keycloak-connect'
 import request from 'request'
 import { getKeycloakConfig } from '../configs/keycloak.config'
 import { CONSTANTS } from './env'
-import { logError, logInfo } from './logger'
+import { logDebug, logError, logInfo } from './logger'
 import { PERMISSION_HELPER } from './permissionHelper'
 const async = require('async')
 
@@ -115,15 +115,14 @@ export class CustomKeycloak {
             formData.client_id = reqObj.session.keycloakClientId
             formData.client_secret = reqObj.session.keycloakClientSecret
           }
-          logInfo('formData used in logout: ' + JSON.stringify(formData))
+            logDebug('formData used in logout for client_id: ' + formData.client_id)
           try {
               request.post({
                   form: formData,
                   url: urlValue,
               })
           } catch (err) {
-              // tslint:disable-next-line: no-console
-              console.log('Failed to call keycloak logout API ', err, '------', new Date().toString())
+              logError('Failed to call keycloak logout API', String(err), '------', new Date().toString())
           }
 
           if (reqObj.session.parichayToken) {
@@ -149,8 +148,7 @@ export class CustomKeycloak {
                 }
               })
             } catch (err) {
-                // tslint:disable-next-line: no-console
-                console.log('Failed to call parichay revoke API ', err, '------', new Date().toString())
+              logError('Failed to call parichay revoke API', String(err), '------', new Date().toString())
             }
           }
         } else {

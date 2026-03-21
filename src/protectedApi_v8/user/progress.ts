@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Router } from 'express'
 import { axiosRequestConfig } from '../../configs/request.config'
 import { CONSTANTS } from '../../utils/env'
-import { logError, logErrorHeading, logInfo } from '../../utils/logger'
+import { logDebug, logError, logErrorHeading, logInfo } from '../../utils/logger'
 import { ERROR } from '../../utils/message'
 import { extractUserId, extractUserIdFromRequest } from '../../utils/requestExtract'
 
@@ -27,8 +27,7 @@ progressApi.get('/:contentId', async (req, res) => {
     const response = await axios.get(API_END_POINTS.progressMeta(uuid, contentId), {
       headers: { rootOrg },
     })
-    // tslint:disable-next-line: no-console
-    console.log('get/:contentId progress api response : ', response)
+    logDebug('get/:contentId progress api status : ' + response.status)
     logInfo('get/:contentId progress api response.data : ', response.data)
     res.json(response.data)
   } catch (err) {
@@ -57,8 +56,7 @@ progressApi.get('/', async (req, res) => {
       method: 'GET',
       url: API_END_POINTS.hash(extractUserId(req)),
     })
-    // tslint:disable-next-line: no-console
-    console.log('get progress api response : ', response)
+    logDebug('get progress api status : ' + response.status)
     logInfo('get progress api response.data : ', response.data)
     res.json(response.data)
   } catch (err) {
@@ -88,8 +86,7 @@ progressApi.post('/', async (req, res) => {
         headers: { rootOrg },
       }
     )
-    // tslint:disable-next-line: no-console
-    console.log('post progress api response : ', response)
+    logDebug('post progress api status : ' + response.status)
     logInfo('post progress api response.data : ', response.data)
 
     res.status(response.status).send(response.data)

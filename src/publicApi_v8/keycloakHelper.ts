@@ -37,8 +37,7 @@ const deauthenticated = async (reqObj: any) => {
                   url: urlValue,
               })
           } catch (err) {
-              // tslint:disable-next-line: no-console
-              console.log('Failed to call keycloak logout API ', err, '------', new Date().toString())
+                  logError('Failed to call keycloak logout API', String(err), '------', new Date().toString())
           }
         } else {
           logError('Not able to retrieve refresh_token value from Session. Logout process failed.')

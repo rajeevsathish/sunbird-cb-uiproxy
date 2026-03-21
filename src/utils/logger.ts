@@ -49,6 +49,14 @@ export function logInfo(...msgs: string[]) {
   logger.info(msgs.join(' '))
 }
 
+export function logDebugHeading(msg: string) {
+  logger.debug(`--- ${msg} ---`)
+}
+
+export function logDebug(...msgs: string[]) {
+  logger.debug(msgs.join(' '))
+}
+
 export function logWarnHeading(msg: string) {
   logger.warn(`--- ${msg} ---`)
 }
