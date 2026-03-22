@@ -2,6 +2,7 @@
 const fs = require('fs')
 const expressCassandra = require('express-cassandra')
 import { CONSTANTS } from '../utils/env'
+import { logDebug } from '../utils/logger'
 const _ = require('lodash')
 const packageObj = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 const uuidv1 = require('uuid/v1')
@@ -17,8 +18,7 @@ function getConsistencyLevel(consistencyParam: any) {
     // tslint:disable-next-line: max-line-length
     return (consistencyParam && _.get(expressCassandra, `consistencies.${consistencyParam}`) ? _.get(expressCassandra, `consistencies.${consistencyParam}`) :  expressCassandra.consistencies.one)
   }
-// tslint:disable-next-line: no-console
-console.log('getIPList method : ', getIPList())
+logDebug('getIPList method : ', JSON.stringify(getIPList()))
 module.exports = {
     db: {
         cassandra: {
