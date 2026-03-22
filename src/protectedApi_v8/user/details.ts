@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Router } from 'express'
 import { axiosRequestConfig } from '../../configs/request.config'
 import { CONSTANTS } from '../../utils/env'
-import { logError, logInfo } from '../../utils/logger'
+import { logInfo } from '../../utils/logger'
 import { ERROR } from '../../utils/message'
 import { request } from '../../utils/request-adapter'
 import { extractUserIdFromRequest } from '../../utils/requestExtract'
@@ -147,6 +147,7 @@ export function wTokenApiMock(req: any, token: any): Promise<any> {
           const user = body.user
           logInfo('User details from wToken API: ', user)
           resolve(body)
+        }
       })
 
     } catch (err) {
