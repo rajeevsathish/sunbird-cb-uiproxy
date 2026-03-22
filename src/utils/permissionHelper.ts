@@ -1,10 +1,7 @@
 const _                 = require('lodash')
-import axios from 'axios'
-import { axiosRequestConfig } from '../configs/request.config'
 import { CONSTANTS } from './env'
 import { logError, logInfo } from './logger'
 import { request } from './request-adapter'
-import { extractUserToken } from './requestExtract'
 
 export const PERMISSION_HELPER = {
     // tslint:disable-next-line: no-any
@@ -31,7 +28,6 @@ export const PERMISSION_HELPER = {
             if (!_.includes(reqObj.session.userRoles, 'PUBLIC')) {
                 reqObj.session.userRoles.push('PUBLIC')
             }
-            this.createNodeBBUser(reqObj, callback)
             // tslint:disable-next-line: no-any
             reqObj.session.save((error: any) => {
                 if (error) {
@@ -44,27 +40,6 @@ export const PERMISSION_HELPER = {
             callback('reqObj.session no session', null)
         }
         logInfo('permission helper:: setRolesData function end', '------', new Date().toString())
-    },
-    // tslint:disable-next-line: no-any
-    setNodeBBUID(reqObj: any, callback: any, body: any) {
-        logInfo('setNodeBBUID :: ', new Date().toString())
-        // tslint:disable-next-line: no-any
-        const nodeBBData: any = body
-        if (reqObj.session) {
-            reqObj.session.uid = nodeBBData.data.result.userId.uid
-            logInfo('After appending uid to session', reqObj.session.uid)
-        }
-        // tslint:disable-next-line: no-any
-        reqObj.session.save((error: any) => {
-            if (error) {
-              logError('reqObj.session.save error -- ', error, '------', new Date().toString())
-              callback(null, null)
-            } else {
-               // tslint:disable-next-line: no-console
-               console.log(`setNodeBBUID::Success of save -- reqObj.session ${new Date()}--- `)
-               callback(null, nodeBBData)
-            }
-        })
     },
     // tslint:disable-next-line: no-any
     getCurrentUserRoles(reqObj: any, callback: any) {
@@ -99,37 +74,5 @@ export const PERMISSION_HELPER = {
                 callback(err, null)
             }
         })
-    },
-    // tslint:disable-next-line: no-any
-    async createNodeBBUser(reqObj: any, callback: any) {
-        const readUrl = `${CONSTANTS.KONG_API_BASE}/discussion/user/v1/create`
-
-        // tslint:disable-next-line: no-commented-code
-        const nodebbPayload =  {
-            username: reqObj.session.userName,
-            // tslint:disable-next-line: object-literal-sort-keys
-            identifier: reqObj.session.userId,
-            fullname: reqObj.session.firstName + ' ' + reqObj.session.lastName,
-        }
-        try {
-            const nodeBBResp = await axios({
-                ...axiosRequestConfig,
-                data: { request: nodebbPayload },
-                 headers: {
-                    Authorization: CONSTANTS.SB_API_KEY,
-                    // tslint:disable-next-line: all
-                    'x-authenticated-user-token': extractUserToken(reqObj),
-                },
-                method: 'POST',
-                url: readUrl,
-            })
-            if (nodeBBResp) {
-                this.setNodeBBUID(reqObj, callback, nodeBBResp)
-            }
-        } catch (err) {
-            // tslint:disable-next-line: no-console
-            console.log('Making axios call to nodeBB ERROR -- ', err, '------', new Date().toString())
-            callback(null, null)
-          }
     },
 }

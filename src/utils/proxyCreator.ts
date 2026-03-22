@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { createProxyServer } from 'http-proxy'
-import { extractUserEmailFromRequest, extractUserId, extractUserToken } from '../utils/requestExtract'
+import { extractUserId, extractUserToken } from '../utils/requestExtract'
 import { CONSTANTS } from './env'
 import { logError, logInfo } from './logger'
 
@@ -46,21 +46,6 @@ proxy.on('proxyReq', (proxyReq: any, req: any, _res: any, _options: any) => {
   }
   proxyReq.setHeader('x-authenticated-user-orgname', channel)
   proxyReq.setHeader('x-authenticated-user-channel', channel)
-  if (req.session.hasOwnProperty('uid')) {
-    proxyReq.setHeader('x-authenticated-user-nodebb-uid', req.session.uid)
-  }
-
-  // condition has been added to set the session in nodebb req header
-  /* tslint:disable-next-line */
-  if (req.originalUrl.includes('/discussion') && !req.originalUrl.includes('/discussion/user/v1/create') && req.session) {
-    if (req.session) {
-      req.sesson.cookie.secure = true
-    }
-    if (req.body && req.session.hasOwnProperty('uid')) {
-      req.body._uid = req.session.uid
-    }
-    logInfo('REQ_URL_ORIGINAL discussion', proxyReq.path)
-  }
   if (!req.originalUrl.includes('/storage/upload') && !req.originalUrl.includes('/storage/profilePhotoUpload/*') && req.body) {
     const bodyData = JSON.stringify(req.body)
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData))
@@ -69,46 +54,8 @@ proxy.on('proxyReq', (proxyReq: any, req: any, _res: any, _options: any) => {
 })
 
 // tslint:disable-next-line: no-any
-proxy.on('proxyRes', (proxyRes: any, req: any, _res: any, ) => {
-  // res.removeHeader('access-control-allow-origin')
+proxy.on('proxyRes', (proxyRes: any, _req: any, _res: any) => {
   delete proxyRes.headers['access-control-allow-origin']
-  // write user session with roles
-  // if (req.originalUrl.includes('/user/v2/read')) {
-  //   // tslint:disable-next-line: no-any
-  //   proxyRes.on('data', (data: any) => {
-  //     if ((proxyRes.statusCode === 200 || proxyRes.statusCode === 201)) {
-  //       data = JSON.parse(data.toString('utf-8'))
-  //       const roles = data.result.response.roles
-  //       req.session.userId = data.result.response.id ? data.result.response.id : data.result.response.userId
-  //       req.session.userName = data.result.response.userName
-  //       req.session.userRoles = roles
-  //       // console.log(req);
-  //       // tslint:disable-next-line: only-arrow-functions
-  //       req.session.save(function(error: string) {
-  //         if (error) {
-  //           // tslint:disable-next-line: no-console
-  //           console.log(error)
-  //         }
-  //       })
-  //     }
-  //   })
-  // }
-  // tslint:disable-next-line: no-any
-  proxyRes.on('data', (data: any) => {
-    if (req.originalUrl.includes('/discussion/user/v1/create')) {
-
-      if ((proxyRes.statusCode === 200 || proxyRes.statusCode === 201)) {
-        data = JSON.parse(data.toString('utf-8'))
-        logInfo('_res==>', data)
-        req.session.uid = data.result.userId.uid
-      }
-      const nodebbToken = '722686c6-2a2e-4b22-addf-c427261fbdc6'
-      if (req.session) {
-        req.session.nodebb_authorization_token = nodebbToken
-      }
-    }
-  })
-
 })
 
 // Error handler — return 502 instead of crashing or hanging the connection
@@ -180,20 +127,6 @@ export function proxyCreatorSunbird(route: Router, targetUrl: string, _timeout =
       url = removePrefix(`${PROXY_SLUG_WAT}`, req.originalUrl)
     } else {
       url = removePrefix(`${PROXY_SLUG}`, req.originalUrl)
-    }
-
-    if (req.originalUrl.includes('/discussion') && !req.originalUrl.includes('/discussion/user/v1/create') && req.session) {
-      if (req.session.hasOwnProperty('uid')) {
-        if (req.originalUrl.includes('?')) {
-          url = `${url}&_uid=${req.session.uid}`
-        } else {
-          url = `${url}?_uid=${req.session.uid}`
-        }
-      }
-      if (req.originalUrl.includes('/discussion/v2/topics')) {
-        req.body.email = extractUserEmailFromRequest(req)
-      }
-      logInfo('REQ_URL_ORIGINAL proxyCreatorSunbird  ======= discussion', url)
     }
 
     if (req.originalUrl.includes('/dashboard') && !req.originalUrl.includes('/dashboard/analytics/getChartV2/Karmayogi') && req.session) {

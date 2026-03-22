@@ -15,7 +15,6 @@ import { contentPrivateApi } from './contentprivate'
 import { contentValidationApi } from './contentValidation'
 import { counterApi } from './counter'
 import { deptApi } from './departments'
-import { discussionHubApi } from './discussionHub/discussionHub'
 import { externalEventsApi } from './event-external'
 import { eventsApi } from './events'
 import {  fracApi } from './frac'
@@ -54,7 +53,6 @@ protectedApiV8.use('/concept', conceptGraphApi)
 protectedApiV8.use('/content', contentApi)
 protectedApiV8.use('/profanity', contentValidationApi)
 protectedApiV8.use('/counter', counterApi)
-protectedApiV8.use('/discussionHub', discussionHubApi)
 protectedApiV8.use('/khub', knowledgeHubApi)
 protectedApiV8.use('/leaderboard', leaderBoardApi)
 protectedApiV8.use('/navigator', navigatorApi)

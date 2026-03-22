@@ -8,7 +8,6 @@ import { CONSTANTS } from '../utils/env'
 import { logError, logInfo } from '../utils/logger'
 import {
   ilpProxyCreatorRoute,
-  // proxyCreatorDiscussion,
   proxyAssessmentRead,
   proxyAssessmentReadV2,
   proxyAssessmentReadV7,
@@ -724,15 +723,6 @@ proxiesV8.use('/data/*',
 )
 
 proxiesV8.use('/assets/*',
-  // tslint:disable-next-line: max-line-length
-  proxyCreatorSunbird(express.Router(), `${CONSTANTS.KONG_API_BASE}`)
-)
-
-// proxiesV8.use('/discussion/user/v1/create',
-//   // tslint:disable-next-line: max-line-length
-//   proxyCreatorDiscussion(express.Router(), `${CONSTANTS.DISCUSSION_HUB_MIDDLEWARE}`)
-// )
-proxiesV8.use('/discussion/*',
   // tslint:disable-next-line: max-line-length
   proxyCreatorSunbird(express.Router(), `${CONSTANTS.KONG_API_BASE}`)
 )
