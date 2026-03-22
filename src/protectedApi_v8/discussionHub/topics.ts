@@ -24,10 +24,7 @@ topicsApi.get('/recent', async (req, res) => {
         const rootOrg = getRootOrg(req)
         const pageNo = req.query.page || 1
         const userId = extractUserIdFromRequest(req)
-        let url = API_ENDPOINTS.getRecentTopics + `?page=${pageNo}`
-        if (CONSTANTS.DISCUSSION_CATEGORY_LIST) {
-            url = url + `&` + CONSTANTS.DISCUSSION_CATEGORY_LIST
-        }
+        const url = API_ENDPOINTS.getRecentTopics + `?page=${pageNo}`
         logInfo(`UserId: ${userId}, rootOrg: ${rootOrg}, Url: ${url}`)
         const response = await axios.get(
             url,

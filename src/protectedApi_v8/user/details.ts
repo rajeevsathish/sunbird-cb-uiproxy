@@ -6,8 +6,6 @@ import { logError, logInfo } from '../../utils/logger'
 import { ERROR } from '../../utils/message'
 import { request } from '../../utils/request-adapter'
 import { extractUserIdFromRequest } from '../../utils/requestExtract'
-import { getUserByEmail } from '../discussionHub/users'
-import { createDiscussionHubUser } from '../discussionHub/writeApi'
 import { getRoles , getUserStatus} from '../portal-v3'
 import { getProfileStatus } from './profile-registry'
 
@@ -147,29 +145,6 @@ export function wTokenApiMock(req: any, token: any): Promise<any> {
         }
         if (body.user) {
           const user = body.user
-          // Check if user is present in NodeBB DiscussionHub
-          // tslint:disable-next-line: no-identical-functions
-          const userPresent = await getUserByEmail(req, user.email).catch(async (err) => {
-            if (err.response && (err.response.status === 404)) {
-              // If user is not already present in nodeBB DiscussionHub
-              // then create the user
-              const reqToDiscussionHub = {
-                email: user.email,
-                fullname: `${user.first_name} ${user.last_name}`,
-                password: CONSTANTS.DISCUSSION_HUB_DEFAULT_PASSWORD,
-                username: user.wid,
-              }
-              // tslint:disable-next-line: no-any
-              await createDiscussionHubUser(req, reqToDiscussionHub).catch((createDiscussionHubUserErr: any) => {
-                logError(`Creatin of User failed..!:`, createDiscussionHubUserErr)
-                resolve(body)
-              })
-            }
-          })
-          if (userPresent) {
-            logInfo('User already present in NodeBB DiscussionHub. Skiping create')
-          }
-        }
         resolve(body)
       })
 

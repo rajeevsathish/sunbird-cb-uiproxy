@@ -16,8 +16,6 @@ const API_END_POINTS = {
     createOSUserRegistry: (userId: string) => `${CONSTANTS.NETWORK_HUB_SERVICE_BACKEND}/v1/user/create/profile?userId=${userId}`,
     createSb: `${CONSTANTS.KONG_API_BASE}/user/v3/create`,
     createUserRegistry: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/createUserRegistry`,
-    // tslint:disable-next-line: object-literal-sort-keys
-    createNodeBBUser: `${CONSTANTS.KONG_API_BASE}/discussion/user/v1/create`,
     getMasterLanguages: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/getMasterLanguages`,
     getMasterNationalities: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/getMasterNationalities`,
     getOSUserRegistryById: (userId: string) => `${CONSTANTS.NETWORK_HUB_SERVICE_BACKEND}/v1/user/search/profile?userId=${userId}`,
@@ -415,30 +413,6 @@ profileDeatailsApi.post('/createUser', async (req, res) => {
             if (statusString.toUpperCase() !== 'SUCCESS') {
                 res.status(500).send(failedToReadUser)
                 return
-            }
-            if (CONSTANTS.PORTAL_CREATE_NODEBB_USER === 'true') {
-                try {
-                // tslint:disable-next-line: no-commented-code
-                const nodebbPayload =  {
-                    username: sbUserReadResponse.data.result.response.userName,
-                    // tslint:disable-next-line: object-literal-sort-keys
-                    identifier: sbUserReadResponse.data.result.response.identifier,
-                    fullname: sbUserReadResponse.data.result.response.firstName,
-                }
-                await axios({
-                    ...axiosRequestConfig,
-                    data: { request: nodebbPayload },
-                        headers: {
-                        Authorization: CONSTANTS.SB_API_KEY,
-                        // tslint:disable-next-line: all
-                        'x-authenticated-user-token': extractUserToken(req),
-                    },
-                    method: 'POST',
-                    url: API_END_POINTS.createNodeBBUser,
-                })
-                } catch (nodeBBerr) {
-                    logError('Failed to create NodeBB account for user: ' + sbUserId)
-                }
             }
             const sbUserOrgId = sbUserReadResponse.data.result.response.rootOrgId
             if (isEmailRequired) {

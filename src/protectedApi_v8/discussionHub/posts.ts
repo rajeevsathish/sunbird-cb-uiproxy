@@ -7,7 +7,7 @@ import { logError, logInfo } from '../../utils/logger'
 import { extractUserIdFromRequest, extractUserToken} from '../../utils/requestExtract'
 
 const API_ENDPOINTS = {
-    getPosts: (term: string) => `${CONSTANTS.DISCUSSION_HUB_API_BASE}/nodebb/api/recent/posts/${term}`,
+    getPosts: (term: string) => `${CONSTANTS.KONG_API_BASE}/nodebb/api/recent/posts/${term}`,
 }
 
 export const postsApi = Router()
