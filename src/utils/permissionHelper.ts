@@ -61,7 +61,7 @@ export const PERMISSION_HELPER = {
               callback(null, null)
             } else {
                     logDebug(`setNodeBBUID::Success of save -- reqObj.session ${new Date()}--- `)
-               callback(null, nodeBBData)
+                    callback(null, nodeBBData)
             }
         })
     },
