@@ -411,7 +411,7 @@ export function apiWhiteListLogger() {
         const REQ_URL = req.path
         if (!_.includes(REQ_URL, '/resource') && !_.includes(REQ_URL, '/eclogin') && (req.session)) {
                const sessionUserRoles = _.get(req, 'session.userRoles', []) as any[]
-             logDebug('UIPROXY:: apiWhiteListLogger : checking if the login is to resource  and session is there')
+               logDebug('UIPROXY:: apiWhiteListLogger : checking if the login is to resource  and session is there')
                if (!('userRoles' in req.session) || sessionUserRoles.length === 0) {
                 logError('Portal_API_WHITELIST_LOGGER: User needs to authenticated themselves', '------', new Date().toString())
                 logDebug('UIPROXY:: apiWhiteListLogger :  respond419 method will be called')
