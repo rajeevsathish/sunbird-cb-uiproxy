@@ -146,7 +146,7 @@ export function wTokenApiMock(req: any, token: any): Promise<any> {
         if (body.user) {
           const user = body.user
           logInfo('User details from wToken API: ', user)
-        resolve(body)
+          resolve(body)
       })
 
     } catch (err) {
