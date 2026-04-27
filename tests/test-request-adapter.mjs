@@ -12,24 +12,7 @@ import http from 'node:http'
 import assert from 'node:assert/strict'
 import { Writable } from 'node:stream'
 
-// --- Import adapter ---
-// Compiled dist is CommonJS — use createRequire to load it.
-import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const require = createRequire(import.meta.url)
-
-let request
-try {
-  const mod = require(path.join(__dirname, '..', 'dist', 'utils', 'request-adapter.js'))
-  request = mod.request
-} catch (err) {
-  console.error('Cannot import request-adapter. Build first: npm run build')
-  console.error(err.message)
-  process.exit(1)
-}
+const { request } = await import('../src/utils/request-adapter.ts')
 
 const PORT = 19877
 let server

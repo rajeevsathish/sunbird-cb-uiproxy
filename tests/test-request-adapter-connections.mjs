@@ -11,22 +11,8 @@
 
 import http from 'node:http'
 import assert from 'node:assert/strict'
-import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const require = createRequire(import.meta.url)
-
-let request
-try {
-  const mod = require(path.join(__dirname, '..', 'dist', 'utils', 'request-adapter.js'))
-  request = mod.request
-} catch (err) {
-  console.error('Cannot import request-adapter. Build first: npm run build')
-  console.error(err.message)
-  process.exit(1)
-}
+const { request } = await import('../src/utils/request-adapter.ts')
+const { sharedHttpAgent, sharedHttpsAgent } = await import('../src/configs/request.config.ts')
 
 const REQUESTS = 50
 const PORT = 19878
@@ -103,8 +89,13 @@ try {
   console.log(`   POST json: ${postJsonSockets} sockets`)
 } catch (err) {
   console.log(`❌ FAIL: ${err.message}`)
-  server.close()
+  await new Promise(resolve => server.close(resolve))
+  sharedHttpAgent.destroy()
+  sharedHttpsAgent.destroy()
   process.exit(1)
 }
 
-server.close()
+sharedHttpAgent.destroy()
+sharedHttpsAgent.destroy()
+await new Promise(resolve => server.close(resolve))
+process.exit(0)

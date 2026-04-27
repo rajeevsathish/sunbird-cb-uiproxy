@@ -53,12 +53,12 @@ export function getDateRangeString(
     const endYear = endDate.getFullYear()
 
     if (startDate.getTime() === endDate.getTime()) {
-      conciseRange = formatDate(endDate, 'DD MMM, YYYY')
+      conciseRange = formatDate(endDate, 'dd MMM, yyyy')
       return conciseRange
     }
 
     if (startYear !== endYear) {
-      const format = 'D MMM, YYYY'
+      const format = 'd MMM, yyyy'
       prefix = formatDate(startDate, format)
       suffix = formatDate(endDate, format)
       conciseRange = `${prefix} - ${suffix}`
@@ -66,11 +66,11 @@ export function getDateRangeString(
     }
 
     if (startMonth !== endMonth) {
-      prefix = formatDate(startDate, 'D MMM')
-      suffix = formatDate(endDate, 'D MMM')
+      prefix = formatDate(startDate, 'd MMM')
+      suffix = formatDate(endDate, 'd MMM')
     } else {
-      prefix = formatDate(startDate, 'D')
-      suffix = formatDate(endDate, 'D MMM, YYYY')
+      prefix = formatDate(startDate, 'd')
+      suffix = formatDate(endDate, 'd MMM, yyyy')
     }
 
     conciseRange = `${prefix} - ${suffix}`
