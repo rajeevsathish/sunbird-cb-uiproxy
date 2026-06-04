@@ -8,6 +8,7 @@
 /.sonarlint
 # dependencies
 /node_modules
+/coverage
 
 # IDEs and editors
 /.idea
@@ -26,6 +27,12 @@
 !.vscode/extensions.json
 .history/*
 
+
 # System Files
 .DS_Store
 Thumbs.db
+KEYCLOAK_CONNECT_KEEPALIVE_ANALYSIS.md
+env-file.local
+PERFORMANCE_ANALYSIS.md
+port-forward-dev.sh
+types/session-extend.d.ts
